@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Handler {
 
   private AmazonS3 s3;
-  private String destinationBucketName = "toobrien2";
+  private String destinationBucketName = "<your bucket>";
   
 
   public Handler() {
@@ -24,14 +24,14 @@ public class Handler {
     String sourceBucketName = e.getBucket().getName();
     String sourceKey = e.getObject().getKey();
 
-    // for good s3 partitioning
-    String destinationPrefix = UUID.randomUUID().toString(); 
+    // random prefix for good s3 partitioning
+    String destinationKey = UUID.randomUUID().toString() + "/" + sourceKey;   
 
     try {
       s3.copyObject(sourceBucketName, sourceKey, 
-        destinationBucketName, destinationPrefix + "/" + sourceKey);
+        destinationBucketName, destinationKey);
     } catch (AmazonClientException ex) {
-      // handle exception
+      System.out.println(ex.toString());
     }
   }
 }
